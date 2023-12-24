@@ -20,7 +20,7 @@ jobs:
       - name: Install ninja
         run: sudo apt install ninja-build
       - name: Configure and build
-        run: scripts/local-build.sh
+        run: chmod +x scripts/local-build.sh && scripts/local-build.sh
         working-directory: ${{ github.workspace }}
   cmake-darwin:
     runs-on: macos-latest
@@ -30,7 +30,7 @@ jobs:
       - name: Install ninja
         run: brew install ninja
       - name: Configure and build
-        run: scripts/local-build.sh
+        run: chmod +x scripts/local-build.sh && scripts/local-build.sh
         working-directory: ${{ github.workspace }}
   cmake-windows:
     runs-on: windows-latest
@@ -40,13 +40,14 @@ jobs:
       - name: Install ninja
         run: choco install ninja
       - name: Configure and build
-        run: scripts/local-build.sh
-        shell: bash  # Specify bash so we can reuse the build script on Windows (runs on Git bash)
+        run: chmod +x scripts/local-build.sh && scripts/local-build.sh
+        shell: bash # Specify bash so we can reuse the build script on Windows (runs on Git bash)
         working-directory: ${{ github.workspace }}
   cmake-android:
     strategy:
       matrix:
-        script: [android-arm64-build.sh, android-armv7-build.sh, android-x86-build.sh]
+        script:
+          [android-arm64-build.sh, android-armv7-build.sh, android-x86-build.sh]
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
@@ -62,7 +63,7 @@ jobs:
           ndk-version: r23b
           add-to-path: false
       - name: Configure and build
-        run: scripts/${{ matrix.script }}
+        run: chmod +x scripts/${{ matrix.script }} && scripts/${{ matrix.script }}
         working-directory: ${{ github.workspace }}
         env:
           ANDROID_NDK: ${{ steps.setup-ndk.outputs.ndk-path }}
